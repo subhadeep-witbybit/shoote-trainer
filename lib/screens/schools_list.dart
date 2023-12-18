@@ -1,44 +1,26 @@
-
 import 'package:flutter/material.dart';
-import 'package:shooter_demo/models/enums.dart';
-
-class ShootingSchool {
-  final int id;
-  final List<ShootingSchoolType> availableTypes;
-  ShootingSchool({required this.availableTypes, required this.id});
-}
+import 'package:provider/provider.dart';
+import 'package:shooter_demo/providers/app_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShootingSchoolsList extends StatefulWidget {
   const ShootingSchoolsList({Key? key}) : super(key: key);
-
   @override
   State<ShootingSchoolsList> createState() => _ShootingSchoolsListState();
 }
 
 class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
-  final List<ShootingSchool> _shootingSchools = [
-    ShootingSchool(id: 0, availableTypes: [ShootingSchoolType.pistol]),
-    ShootingSchool(id: 1, availableTypes: [ShootingSchoolType.shotgun]),
-    ShootingSchool(
-        id: 2,
-        availableTypes: [ShootingSchoolType.sniper, ShootingSchoolType.rifle]),
-    ShootingSchool(id: 3, availableTypes: [
-      ShootingSchoolType.pistol,
-      ShootingSchoolType.rifle,
-      ShootingSchoolType.shotgun
-    ]),
-    ShootingSchool(id: 4, availableTypes: [
-      ShootingSchoolType.pistol,
-      ShootingSchoolType.sniper,
-      ShootingSchoolType.shotgun,
-      ShootingSchoolType.sniper
-    ]),
-  ];
+  late AppState _appState;
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  int sniperShots = 0;
-  int pistolShots = 0;
-  int rifleShots = 0;
-  int shotgunShots = 0;
+  @override
+  void didChangeDependencies() {
+    _appState = Provider.of<AppState>(context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +28,10 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
         elevation: 1,
-        title: const Text(
-          'Shooting Schools',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context)!.shootingSchool,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
@@ -82,7 +65,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              sniperShots.toString(),
+                              _appState.sniperShots.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 16,
@@ -110,7 +93,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              pistolShots.toString(),
+                              _appState.pistolShots.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 16,
@@ -138,7 +121,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              rifleShots.toString(),
+                              _appState.rifleShots.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 16,
@@ -166,7 +149,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              shotgunShots.toString(),
+                              _appState.shotgunShots.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 16,
@@ -183,68 +166,76 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: _shootingSchools.length,
+                itemCount: _appState.shootingSchools.length,
                 itemBuilder: (context, index) => Container(
-                      padding: const EdgeInsets.all(5),
                       margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.teal,
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 207, 189, 189)),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      child: InkWell(
+                        onTap: () {
+                          _appState.setSelectedSchool(index);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.teal,
+                            border: Border.all(
+                                color:
+                                    const Color.fromARGB(255, 207, 189, 189)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Shooting School ${_shootingSchools[index].id + 1}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                    color: Colors.white),
-                              ),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                  height: 30,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: _shootingSchools[index]
-                                        .availableTypes
-                                        .length,
-                                    itemBuilder: (context, i) => Container(
-                                      width: 30,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Shooting School ${_appState.shootingSchools[index].id + 1}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 16,
+                                        color: Colors.white),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
                                       height: 30,
-                                      margin: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color.fromARGB(
-                                                255, 81, 44, 44)),
-                                        image: DecorationImage(
-                                          scale: 0.2,
-                                          image: AssetImage(
-                                              'guns/${_shootingSchools[index].availableTypes[i].toString().split('.').last}.png'),
-                                          fit: BoxFit.contain,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        shrinkWrap: true,
+                                        itemCount: _appState
+                                            .shootingSchools[index]
+                                            .availableTypes
+                                            .length,
+                                        itemBuilder: (context, i) => Container(
+                                          width: 30,
+                                          height: 30,
+                                          margin: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 81, 44, 44)),
+                                            image: DecorationImage(
+                                              scale: 0.2,
+                                              image: AssetImage(
+                                                  'guns/${_appState.shootingSchools[index].availableTypes[i].toString().split('.').last}.png'),
+                                              fit: BoxFit.contain,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
+                                      ))
+                                ],
+                              ),
+                              IconButton(
+                                  tooltip: 'Train here',
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.arrow_right,
+                                    color: Colors.white,
                                   ))
                             ],
                           ),
-                          IconButton(
-                              tooltip: 'Train here',
-                              onPressed: () {
-                                
-                              },
-                              icon: const Icon(
-                                Icons.arrow_right,
-                                color: Colors.white,
-                              ))
-                        ],
+                        ),
                       ),
                     )),
           ),

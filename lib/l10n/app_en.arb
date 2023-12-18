@@ -1,0 +1,10 @@
+{
+  "@@locale": "en",
+  "shotgun": "Shotgun",
+  "sniper": "Sniper Rifle",
+  "pistol": "Pistol",
+  "rifle": "Rifle",
+  "trainingGround": "Training Ground",
+  "shootingSchool": "Shooting Range",
+  "trainHere": "Train Here"
+}
