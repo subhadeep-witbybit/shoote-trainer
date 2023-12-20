@@ -8,7 +8,6 @@ import 'package:shooter_demo/routes/router_delegate.dart';
 import 'package:shooter_demo/routes/router_parser.dart';
 
 void mainApp(String localeCode) {
-  print(localeCode);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AppState()),

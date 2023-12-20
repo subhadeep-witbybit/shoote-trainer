@@ -62,6 +62,7 @@ class _SchoolsDetailsState extends State<SchoolsDetails> {
                           color: Colors.blue,
                         ),
                         child: InkWell(
+                          key: const Key('guns'),
                           borderRadius: BorderRadius.circular(100),
                           onTap: () {
                             final type = _appState

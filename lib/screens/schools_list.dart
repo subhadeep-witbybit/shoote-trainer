@@ -1,7 +1,9 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooter_demo/providers/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shooter_demo/providers/localization_provider.dart';
 
 class ShootingSchoolsList extends StatefulWidget {
   const ShootingSchoolsList({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class ShootingSchoolsList extends StatefulWidget {
 
 class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
   late AppState _appState;
+  late LocalizationsProvider _localizationsProvider;
   @override
   void initState() {
     super.initState();
@@ -19,6 +22,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
   @override
   void didChangeDependencies() {
     _appState = Provider.of<AppState>(context);
+    _localizationsProvider = Provider.of<LocalizationsProvider>(context);
     super.didChangeDependencies();
   }
 
@@ -33,6 +37,24 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          AnimatedToggleSwitch.dual(
+            current: _localizationsProvider.locale!.languageCode,
+            first: 'en',
+            second: 'hi',
+            onChanged: (index) {
+              if (index == 'hi') {
+                setState(() {
+                  _localizationsProvider.setLocale(const Locale('en'));
+                });
+              } else {
+                setState(() {
+                  _localizationsProvider.setLocale(const Locale('hi'));
+                });
+              }
+            },
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -144,6 +166,7 @@ class _ShootingSchoolsListState extends State<ShootingSchoolsList> {
                           children: [
                             const Text(
                               'Shotgun Shots',
+                              key: Key('shotgun_shots'),
                               style:
                                   TextStyle(fontSize: 10, color: Colors.white),
                             ),

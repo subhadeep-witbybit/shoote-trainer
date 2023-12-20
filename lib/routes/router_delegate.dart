@@ -21,10 +21,17 @@ class ShooterRouterDelegate extends RouterDelegate<ShooterRouterInfo>
         ),
         if (appState.selectedSchool != null)
           const MaterialPage(
-              key: ValueKey('ShootingSchoolsDetails'),
-              child: SchoolsDetails())
+              key: ValueKey('ShootingSchoolsDetails'), child: SchoolsDetails())
       ],
-      onPopPage: (route, result) => route.didPop(result),
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+        if (route.settings.name == PageName.list.toString()) {
+          appState.setSelectedSchool(null);
+        }
+        return true;
+      },
     );
   }
 
@@ -43,8 +50,6 @@ class ShooterRouterDelegate extends RouterDelegate<ShooterRouterInfo>
     }
     return;
   }
-
-  
 
   @override
   GlobalKey<NavigatorState>? get navigatorKey => GlobalKey<NavigatorState>();
